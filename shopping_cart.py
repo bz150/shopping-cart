@@ -40,4 +40,22 @@ def to_usd(my_price):
 
 # TODO: write some Python code here to produce the desired output
 
-print(products)
+# print(products)
+
+# print(type(products[0]["id"])) #product ID are all int
+
+active = True #setting the variable for the while loop to true to start
+product_id_list = [] #creating an empty list to append IDs into
+while active == True:    
+    product_id = input("Please input the ID number of your product:")
+    if product_id != "done":
+        print(product_id)
+        product_id_list.append(int(product_id))
+    elif product_id == "done":    
+        #active == False
+        break
+
+print(product_id_list)
+
+#for i in student_list:
+#  print("+ Student:", i["studentId"], "Grade:", i["finalGrade"])
