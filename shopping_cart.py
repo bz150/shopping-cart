@@ -1,6 +1,7 @@
 # shopping_cart.py
 # pasted in from https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/README.md
 from datetime import datetime
+import webbrowser
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -42,25 +43,29 @@ def to_usd(my_price):
 # TODO: write some Python code here to produce the desired output
 
 # print(products)
-
 # print(type(products[0]["id"])) #product ID are all int
 
+# 
+# USER INPUT
+# 
 active = True #setting the variable for the while loop to true to start
 product_id_list = [] #creating an empty list to append IDs into
 while active == True:    
     product_id = input("Please input the ID number of your product:")
     if product_id != "done":
-        #print(product_id)
-        product_id_list.append(int(product_id))
+        product_id_list.append(product_id)
     elif product_id == "done":    
         #active == False
         break
 
-# print(product_id_list)
-
-print("BRYAN'S FRESH MARKET")
-# INSERT URL
+# 
+# PROGRAM OUTPUT
+# 
 print("---------------------------------")
+print("BRYAN'S FRESH MARKET")
+print("WWW.BryansFreshMarket.com") #add hyperlink?
+print("---------------------------------")
+
 
 # printing the time of checkout
 now = datetime.now()
@@ -68,13 +73,23 @@ current_date_time = now.strftime("%m/%d/%Y %H:%M:%S")
 print("CHECKOUT AT:", current_date_time)
 print("---------------------------------")
 
+
 # printing selected products
+    # thanks to Prof. Rossetti for the lookup matching lines
 print("SELECTED PRODUCTS:")
 price_list = []
-for i in product_id_list:
-    print("+", products[i-1]["name"], "...", to_usd(products[i-1]["price"]))
-    price_list.append(products[i-1]["price"])
+for product_id in product_id_list:
+    selected_products = [x for x in products if str(x["id"]) == str(product_id)]
+    selected_product = selected_products[0]
+    price_list.append(selected_product["price"])
+    print("+ ", selected_product["name"], "...", to_usd(selected_product["price"]))
 print("---------------------------------")
+
+# my original way
+# for i in product_id_list:
+#     print("+", products[i-1]["name"], "...", to_usd(products[i-1]["price"]))
+#     price_list.append(products[i-1]["price"])
+# print("---------------------------------")
 
 # totaling the bill
 subtotal = sum(price_list)
@@ -86,7 +101,3 @@ print("---------------------------------")
 
 print("THANKS, SEE YOU AGAIN SOON!")
 print("---------------------------------")
-
-
-#for i in student_list:
-#  print("+ Student:", i["studentId"], "Grade:", i["finalGrade"])
