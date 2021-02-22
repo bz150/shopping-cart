@@ -1,5 +1,6 @@
 # shopping_cart.py
 # pasted in from https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/README.md
+from datetime import datetime
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -49,13 +50,43 @@ product_id_list = [] #creating an empty list to append IDs into
 while active == True:    
     product_id = input("Please input the ID number of your product:")
     if product_id != "done":
-        print(product_id)
+        #print(product_id)
         product_id_list.append(int(product_id))
     elif product_id == "done":    
         #active == False
         break
 
-print(product_id_list)
+# print(product_id_list)
+
+print("BRYAN'S FRESH MARKET")
+# INSERT URL
+print("---------------------------------")
+
+# printing the time of checkout
+now = datetime.now()
+current_date_time = now.strftime("%m/%d/%Y %H:%M:%S")
+print("CHECKOUT AT:", current_date_time)
+print("---------------------------------")
+
+# printing selected products
+print("SELECTED PRODUCTS:")
+price_list = []
+for i in product_id_list:
+    print("+", products[i-1]["name"], "...", to_usd(products[i-1]["price"]))
+    price_list.append(products[i-1]["price"])
+print("---------------------------------")
+
+# totaling the bill
+subtotal = sum(price_list)
+tax = subtotal * 0.0875
+print("SUBTOTAL:", to_usd(subtotal))
+print("TAX:", to_usd(tax))
+print("TOTAL:", to_usd(tax+subtotal))
+print("---------------------------------")
+
+print("THANKS, SEE YOU AGAIN SOON!")
+print("---------------------------------")
+
 
 #for i in student_list:
 #  print("+ Student:", i["studentId"], "Grade:", i["finalGrade"])
