@@ -85,22 +85,26 @@ print("---------------------------------")
     # thanks to Prof. Rossetti for the lookup matching lines
 print("SELECTED PRODUCTS:")
 price_list = []
+item_list = []
 for product_id in product_id_list:
     selected_products = [x for x in products if str(x["id"]) == str(product_id)]
     selected_product = selected_products[0]
-    price_list.append(selected_product["price"])
+    price_list.append(round(selected_product["price"],2))
+    item_list.append(selected_product) #list of dictionaries with items selected
     print("+ ", selected_product["name"], "...", to_usd(selected_product["price"]))
 print("---------------------------------")
 
-# my original way
-# for i in product_id_list:
-#     print("+", products[i-1]["name"], "...", to_usd(products[i-1]["price"]))
-#     price_list.append(products[i-1]["price"])
-# print("---------------------------------")
+            # my original way
+            # for i in product_id_list:
+            #     print("+", products[i-1]["name"], "...", to_usd(products[i-1]["price"]))
+            #     price_list.append(products[i-1]["price"])
+            # print("---------------------------------")
+
 
 # totaling the bill
 subtotal = sum(price_list)
 tax = subtotal * 0.0875
+
 print("SUBTOTAL:", to_usd(subtotal))
 print("TAX:", to_usd(tax))
 print("TOTAL:", to_usd(tax+subtotal))
@@ -128,16 +132,20 @@ if customer_choice == "y":
         SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
 
         # this must match the test data structure
+
         template_data = {
-            "total_price_usd": "$14.95",
-            "human_friendly_timestamp": "June 1st, 2019 10:00 AM",
-            "products":[
-                {"id":1, "name": "Product 1"},
-                {"id":2, "name": "Product 2"},
-                {"id":3, "name": "Product 3"},
-                {"id":2, "name": "Product 2"},
-                {"id":1, "name": "Product 1"}
-            ]
+            "total_price_usd": to_usd(subtotal+tax),
+            "subtotal_price_usd": to_usd(subtotal),
+            "tax_price_usd": to_usd(tax),
+            "human_friendly_timestamp": current_date_time,
+            "products": item_list
+            #[
+            #    {"id":1, "name": "Product 1"},
+            #    {"id":2, "name": "Product 2"},
+            #    {"id":3, "name": "Product 3"},
+            #    {"id":2, "name": "Product 2"},
+            #    {"id":1, "name": "Product 1"}
+            #]
         } # or construct this dictionary dynamically based on the results of some other process :-D
 
         client = SendGridAPIClient(SENDGRID_API_KEY)
