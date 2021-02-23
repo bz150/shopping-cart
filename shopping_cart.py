@@ -106,6 +106,7 @@ print("---------------------------------")
 # 
 # SENDGRID EMAIL RECEIPT
 # 
+
 import os
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
