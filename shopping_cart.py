@@ -1,7 +1,14 @@
 # shopping_cart.py
 # pasted in from https://github.com/prof-rossetti/intro-to-python/blob/master/projects/shopping-cart/README.md
-from datetime import datetime
-import webbrowser
+
+from datetime import datetime #timestamp
+import webbrowser #URL potentially
+
+import os
+from dotenv import load_dotenv #email receipt
+from sendgrid import SendGridAPIClient #email receipt
+from sendgrid.helpers.mail import Mail #email receipt
+load_dotenv()
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -99,44 +106,81 @@ print("TAX:", to_usd(tax))
 print("TOTAL:", to_usd(tax+subtotal))
 print("---------------------------------")
 
-print("THANKS, SEE YOU AGAIN SOON!")
-print("---------------------------------")
-
 
 # 
 # SENDGRID EMAIL RECEIPT
-# 
+# (or skip out)
 
-import os
-from dotenv import load_dotenv
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+customer_choice = input("Would you like a receipt? (y/n) ")
+customer_choice = customer_choice.lower()
+if customer_choice == "y":
+    customer_email = input("What is your email address?")
+    if "@" not in customer_email:
+        print("Sorry, there was an error.")
+        print("THANKS, SEE YOU AGAIN SOON!")
+        print("---------------------------------")
+        exit()
+    else:
+        EMAIL_ADDRESS = customer_email
+        print(f"Sending an email to {EMAIL_ADDRESS}")
 
-load_dotenv()
+        SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
+        SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
 
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
-SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
+        client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
+        print("CLIENT:", type(client))
 
-client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
-print("CLIENT:", type(client))
+        subject = "Your Receipt from Bryan's Fresh Market"
 
-subject = "Your Receipt from the Green Grocery Store"
+        #message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS, subject=subject, html_content=html_content)
 
-html_content = "Hello World"
-print("HTML:", html_content)
+        price_list = []
+        for product_id in product_id_list:
+            selected_products = [x for x in products if str(x["id"]) == str(product_id)]
+            selected_product = selected_products[0]
+            price_list.append(selected_product["price"])
+            print("+ ", selected_product["name"], "...", to_usd(selected_product["price"]))
+        print("---------------------------------")
 
-# FYI: we'll need to use our verified SENDER_ADDRESS as the `from_email` param
-# ... but we can customize the `to_emails` param to send to other addresses
-message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS, subject=subject, html_content=html_content)
+        subtotal = sum(price_list)
+        tax = subtotal * 0.0875
+        print(subtotal)
+    #
+    #    receipt = {
+    #        "subtotal_price_usd": to_usd(subtotal),
+    #        "tax_price_usd": to_usd(tax),
+    #        "total_price_usd": to_usd(total),
+    #        "human_friendly_timestamp": human_friendly_timestamp,
+    #        "products": formatted_products
+    #    }
+    #    #print(receipt)
+    #
+        client = SendGridAPIClient(SENDGRID_API_KEY)
+     
+        message = Mail(from_email=customer_email, to_emails=customer_email)
+        #message.template_id = SENDGRID_TEMPLATE_ID
+        #message.dynamic_template_data = receipt
+     
+        response = client.send(message)
+     
+        if str(response.status_code) == "202":
+            print("Email sent successfully!")
+        else:
+            print("Oh, something went wrong with sending the email.")
+            print(response.status_code)
+            print(response.body)
 
-try:
-    response = client.send(message)
+else:
+    print("THANKS, SEE YOU AGAIN SOON!")
+    print("---------------------------------")
+    
+    
 
-    print("RESPONSE:", type(response)) #> <class 'python_http_client.client.Response'>
-    print(response.status_code) #> 202 indicates SUCCESS
-    print(response.body)
-    print(response.headers)
 
-except Exception as err:
-    print(type(err))
-    print(err)
+
+
+
+
+
+
+
