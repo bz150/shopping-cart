@@ -5,9 +5,9 @@ from datetime import datetime #timestamp
 import webbrowser #URL potentially
 
 import os
-from dotenv import load_dotenv #email receipt
-from sendgrid import SendGridAPIClient #email receipt
-from sendgrid.helpers.mail import Mail #email receipt
+from dotenv import load_dotenv #connected to env variables
+from sendgrid import SendGridAPIClient #email receipt using sendgrid
+from sendgrid.helpers.mail import Mail #email receipt using sendgrid
 load_dotenv()
 
 products = [
@@ -103,19 +103,23 @@ print("---------------------------------")
 
 # totaling the bill
 subtotal = sum(price_list)
-#TAX_RATE = os.getenv(TAX_RATE, default = 0.0875)
-tax = subtotal * 0.0875
+TAX_RATE = os.getenv("TAX_RATE", default = 0.0875)
+TAX_RATE = float(TAX_RATE) #convert the env var to a float
+#print(type(TAX_RATE))
+tax = subtotal * TAX_RATE
 
 
 print("SUBTOTAL:", to_usd(subtotal))
+#print("TAX RATE:", TAX_RATE) #used to test default/user entered tax rate working
 print("TAX:", to_usd(tax))
 print("TOTAL:", to_usd(tax+subtotal))
 print("---------------------------------")
 
 
 # 
-# SENDGRID EMAIL RECEIPT
-# (or skip out)
+# SENDGRID EMAIL RECEIPT (or skip to end)
+# 
+# Attribution for all Sendgrid-related content to Prof. Rossetti - https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/sendgrid.md
 
 customer_choice = input("Would you like a receipt? (y/n) ") #ask user
 customer_choice = customer_choice.lower()
@@ -126,34 +130,24 @@ if customer_choice == "y":
         print("THANKS, SEE YOU AGAIN SOON!")
         print("---------------------------------")
         exit()
-    else:
-        # FIGURE OUT HOW TO SEND TO THE EMAIL ENTERED
-        
+    else:        
         SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
         SENDGRID_TEMPLATE_ID = os.getenv("SENDGRID_TEMPLATE_ID", default="OOPS, please set env var called 'SENDGRID_TEMPLATE_ID'")
         SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
 
-        # this must match the test data structure
-
-        template_data = {
+        template_data = { # must match the test data structure
             "total_price_usd": to_usd(subtotal+tax),
             "subtotal_price_usd": to_usd(subtotal),
             "tax_price_usd": to_usd(tax),
             "human_friendly_timestamp": current_date_time,
             "products": item_list
-            #[
-            #    {"id":1, "name": "Product 1"},
-            #    {"id":2, "name": "Product 2"},
-            #    {"id":3, "name": "Product 3"},
-            #    {"id":2, "name": "Product 2"},
-            #    {"id":1, "name": "Product 1"}
-            #]
         } # or construct this dictionary dynamically based on the results of some other process :-D
 
         client = SendGridAPIClient(SENDGRID_API_KEY)
         #print("CLIENT:", type(client))
 
-        message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS)
+        #message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS)
+        message = Mail(from_email=SENDER_ADDRESS, to_emails=customer_email)
         message.template_id = SENDGRID_TEMPLATE_ID
         message.dynamic_template_data = template_data
         #print("MESSAGE:", type(message))
@@ -174,20 +168,11 @@ if customer_choice == "y":
             #print(response.status_code)
             #print(response.body)
         except Exception as err:
-            print(type(err))
-            print(err)
-        
+            print("Sorry, something went wrong with sending to that email address.")
+            #print(type(err))
+            #print(err)
+            print("THANKS, SEE YOU AGAIN SOON!")
+            print("---------------------------------")
 else:
     print("THANKS, SEE YOU AGAIN SOON!")
     print("---------------------------------")
-    
-    
-
-
-
-
-
-
-
-
-
