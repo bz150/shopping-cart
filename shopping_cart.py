@@ -103,7 +103,9 @@ print("---------------------------------")
 
 # totaling the bill
 subtotal = sum(price_list)
+#TAX_RATE = os.getenv(TAX_RATE, default = 0.0875)
 tax = subtotal * 0.0875
+
 
 print("SUBTOTAL:", to_usd(subtotal))
 print("TAX:", to_usd(tax))
@@ -115,7 +117,7 @@ print("---------------------------------")
 # SENDGRID EMAIL RECEIPT
 # (or skip out)
 
-customer_choice = input("Would you like a receipt? (y/n) ")
+customer_choice = input("Would you like a receipt? (y/n) ") #ask user
 customer_choice = customer_choice.lower()
 if customer_choice == "y":
     customer_email = input("What is your email address? ")
@@ -149,24 +151,32 @@ if customer_choice == "y":
         } # or construct this dictionary dynamically based on the results of some other process :-D
 
         client = SendGridAPIClient(SENDGRID_API_KEY)
-        print("CLIENT:", type(client))
+        #print("CLIENT:", type(client))
 
         message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS)
         message.template_id = SENDGRID_TEMPLATE_ID
         message.dynamic_template_data = template_data
-        print("MESSAGE:", type(message))
+        #print("MESSAGE:", type(message))
 
         try:
             response = client.send(message)
-            print("RESPONSE:", type(response))
-            print(response.status_code)
-            print(response.body)
-            print(response.headers)
-
+            if response.status_code == 202:
+                print("Email sent successfully!")
+                print("THANKS, SEE YOU AGAIN SOON!")
+                print("---------------------------------")
+            else:
+                print("Sorry, there was an error.")
+                print("THANKS, SEE YOU AGAIN SOON!")
+                print("---------------------------------")
+                exit()
+            #print("RESPONSE:", type(response))
+            #print(response.headers)
+            #print(response.status_code)
+            #print(response.body)
         except Exception as err:
             print(type(err))
             print(err)
-
+        
 else:
     print("THANKS, SEE YOU AGAIN SOON!")
     print("---------------------------------")
