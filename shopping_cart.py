@@ -58,10 +58,10 @@ def to_usd(my_price):
 active = True #setting the variable for the while loop to true to start
 product_id_list = [] #creating an empty list to append IDs into
 while active == True:    
-    product_id = input("Please input the ID number of your product:")
-    if product_id != "done":
+    product_id = input("Please input the ID of your product or 'done': ")
+    if product_id.lower() != "done":
         product_id_list.append(product_id)
-    elif product_id == "done":    
+    elif product_id.lower() == "done":    
         #active == False
         break
 
@@ -121,7 +121,7 @@ print("---------------------------------")
 # 
 # Attribution for all Sendgrid-related content to Prof. Rossetti - https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/packages/sendgrid.md
 
-customer_choice = input("Would you like a receipt? (y/n) ") #ask user
+customer_choice = input("Would you like a receipt emailed to you? (y/n) ") #ask user
 customer_choice = customer_choice.lower()
 if customer_choice == "y":
     customer_email = input("What is your email address? ")
