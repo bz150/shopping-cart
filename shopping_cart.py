@@ -49,34 +49,37 @@ def to_usd(my_price):
 
 # TODO: write some Python code here to produce the desired output
 
-# print(products)
 # print(type(products[0]["id"])) #product ID are all int
 
 # 
 # USER INPUT
-# 
+#
+
+valid_id_list = [str(x["id"]) for x in products]
 active = True #setting the variable for the while loop to true to start
 product_id_list = [] #creating an empty list to append IDs into
 while active == True:    
     product_id = input("Please input the ID of your product or 'done': ")
-    if product_id.lower() != "done":
+    if product_id in valid_id_list:
         product_id_list.append(product_id)
     elif product_id.lower() == "done":    
-        #active == False
-        break
+        active = False
+        #break
+    else:
+        print("Please enter a valid ID or 'done' if you are finished.")
 
 # 
 # PROGRAM OUTPUT
 # 
 print("---------------------------------")
 print("BRYAN'S FRESH MARKET")
-print("WWW.BryansFreshMarket.com") #add hyperlink?
+print("www.BryansFreshMarket.com")
 print("---------------------------------")
 
 
 # printing the time of checkout
 now = datetime.now()
-current_date_time = now.strftime("%m/%d/%Y %H:%M:%S")
+current_date_time = now.strftime("%m/%d/%Y  %H:%M:%S")
 print("CHECKOUT AT:", current_date_time)
 print("---------------------------------")
 
@@ -105,7 +108,6 @@ print("---------------------------------")
 subtotal = sum(price_list)
 TAX_RATE = os.getenv("TAX_RATE", default = 0.0875)
 TAX_RATE = float(TAX_RATE) #convert the env var to a float
-#print(type(TAX_RATE))
 tax = subtotal * TAX_RATE
 
 
