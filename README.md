@@ -37,10 +37,10 @@ The SENDER_ADDRESS is the email that you used to create and verify your SendGrid
 Lastly, the SENDGRID_TEMPLATE_ID is up to you to create. If you add a [dynamic template](https://mc.sendgrid.com/dynamic-templates), SendGrid will provide you an ID. 
 ```
 SENDGRID_API_KEY = key
-SENDER_ADDRESS = "user@email.com"
+SENDER_ADDRESS = "your@email.com"
 SENDGRID_TEMPLATE_ID = key 
 ```
-This is an example template, once again based off of Prof. Rossetti's. Please feel free to customize it based off of your goals.
+This is an example template code once again based off of Prof. Rossetti's. Please feel free to customize it based off of your goals.
 ```
 <html>
     <head>
@@ -65,9 +65,6 @@ This is an example template, once again based off of Prof. Rossetti's. Please fe
     <p>Tax: {{tax_price_usd}}</p>
     <p>Total: {{total_price_usd}}</p>
     
-    
-    
-    
       <div data-role="module-unsubscribe" class="module" role="module" data-type="unsubscribe" style="color:#444444; font-size:12px; line-height:20px; padding:16px 16px 16px 16px; text-align:Center;" data-muid="4e838cf3-9892-4a6d-94d6-170e474d21e5">
         
         <p style="font-size:12px; line-height:20px;">
@@ -83,3 +80,34 @@ This is an example template, once again based off of Prof. Rossetti's. Please fe
     </body>
 </html>
 ```
+Under the test data tab, you should make edits accordingly. I have (again based on Prof. Rossetti's code) changed it so the products list is updated.
+```
+{
+    "total_price_usd": "$99.99",
+    "human_friendly_timestamp": "July 4th, 2099 10:00 AM",
+    
+    "products":[
+        {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
+        {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99},
+        {"id":3, "name": "Robust Golden Unsweetened Oolong Tea", "department": "beverages", "aisle": "tea", "price": 2.49},
+        {"id":4, "name": "Smart Ones Classic Favorites Mini Rigatoni With Vodka Cream Sauce", "department": "frozen", "aisle": "frozen meals", "price": 6.99},
+        {"id":5, "name": "Green Chile Anytime Sauce", "department": "pantry", "aisle": "marinades meat preparation", "price": 7.99},
+        {"id":6, "name": "Dry Nose Oil", "department": "personal care", "aisle": "cold flu allergy", "price": 21.99},
+        {"id":7, "name": "Pure Coconut Water With Orange", "department": "beverages", "aisle": "juice nectars", "price": 3.50},
+        {"id":8, "name": "Cut Russet Potatoes Steam N' Mash", "department": "frozen", "aisle": "frozen produce", "price": 4.25},
+        {"id":9, "name": "Light Strawberry Blueberry Yogurt", "department": "dairy eggs", "aisle": "yogurt", "price": 6.50},
+        {"id":10, "name": "Sparkling Orange Juice & Prickly Pear Beverage", "department": "beverages", "aisle": "water seltzer sparkling water", "price": 2.99},
+        {"id":11, "name": "Peach Mango Juice", "department": "beverages", "aisle": "refrigerated", "price": 1.99},
+        {"id":12, "name": "Chocolate Fudge Layer Cake", "department": "frozen", "aisle": "frozen dessert", "price": 18.50},
+        {"id":13, "name": "Saline Nasal Mist", "department": "personal care", "aisle": "cold flu allergy", "price": 16.00},
+        {"id":14, "name": "Fresh Scent Dishwasher Cleaner", "department": "household", "aisle": "dish detergents", "price": 4.99},
+        {"id":15, "name": "Overnight Diapers Size 6", "department": "babies", "aisle": "diapers wipes", "price": 25.50},
+        {"id":16, "name": "Mint Chocolate Flavored Syrup", "department": "snacks", "aisle": "ice cream toppings", "price": 4.50},
+        {"id":17, "name": "Rendered Duck Fat", "department": "meat seafood", "aisle": "poultry counter", "price": 9.99},
+        {"id":18, "name": "Pizza for One Suprema Frozen Pizza", "department": "frozen", "aisle": "frozen pizza", "price": 12.50},
+        {"id":19, "name": "Gluten Free Quinoa Three Cheese & Mushroom Blend", "department": "dry goods pasta", "aisle": "grains rice dried goods", "price": 3.99},
+        {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25}  
+    ]
+}
+```
+After that updating all your variables on the .env file and setting up the SendGrid dynamic template, you should be ready to use the email features.
